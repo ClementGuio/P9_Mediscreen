@@ -1,0 +1,16 @@
+CREATE database patientDB;
+
+USE patientDB;
+
+CREATE TABLE patient (
+
+	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	firstname VARCHAR(64) NOT NULL,
+	lastname VARCHAR(64) NOT NULL,
+	gender VARCHAR(1) NOT NULL,
+	address VARCHAR(256) NOT NULL,
+	phone VARCHAR(10) NOT NULL
+
+);
+	
+	
