@@ -1,0 +1,20 @@
+version: '1'
+
+services:
+   app:
+        image: 'docker-patient-api:latest'
+        build:
+            context: .
+        container_name: patient-api
+
+
+   db:
+        image: mysql:8.0.31
+        container_name: patient-db
+        environment:
+           MYSQL_ROOT_PASSWORD: rootroot
+           MYSQL_DATABASE: patientDB
+           DOCKER_HOST: //localhost:3306/patientDB
+        ports:
+           - "3308:3306"
+        
