@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Home</title>
+<link rel="stylesheet" href="http://localhost:8081/static/styles.css" >
+</head>
+<body>
+<div class="container">
+	
+	<script>
+	function sendChosenPatientToParent(id){
+		console.log(id);
+		window.parent.postMessage(id,'http://localhost:8081');
+	}
+	</script>
+	
+	<div><h2>Patient list</h2></div>
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th>Firstname</th>
+					<th>Lastname</th>
+					<th>Birthdate</th>
+					<th>Select</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="patient : ${patientlist}">
+					<td th:text="${patient.firstname}"></td>
+					<td th:text="${patient.lastname}"></td>
+					<td th:text="${patient.birthdate}"></td>
+					<td><button th:onclick="sendChosenPatientToParent([[${patient.id}]])">Select</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+
+</div>
+</body>
+</html>

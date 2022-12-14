@@ -1,6 +1,8 @@
 package com.mediscreen.patientapi.model;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -35,6 +40,8 @@ public class Patient {
 	
 	@NotNull
 	@Column(name="birthdate")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	Date birthdate;
 	
 	@NotBlank
@@ -87,7 +94,7 @@ public class Patient {
 		this.lastname = lastname;
 	}
 	@JsonGetter("Birthdate")
-	public Date getBirhtdate() {
+	public Date getBirthdate() {
 		return birthdate;
 	}
 	
