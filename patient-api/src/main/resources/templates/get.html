@@ -7,8 +7,18 @@
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
 </head>
 <body>
+
+<--!TODO: revoir la mise en forme des infos-->
+
 <div class="container">
-	Patient : <span th:object="${patient}" th:text="*{firstname}"/>
+	<ul th:object="${patient}">
+		<li>Firstname : <span th:text="*{firstname}"></span></li>
+		<li>Lastname : <span th:text="*{lastname}"></span></li>
+		<li>Gender : <span th:text="*{gender}"></span></li>
+		<li>Birthdate : <span th:text="*{birthdate}"></span></li>
+		<li>Address : <span th:text="*{address}"></span></li>
+		<li>Phone : <span th:text="*{phone}"></span></li>
+	</ul>		
 </div>
 </body>
 </html>

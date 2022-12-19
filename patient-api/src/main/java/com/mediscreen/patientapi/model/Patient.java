@@ -1,7 +1,5 @@
 package com.mediscreen.patientapi.model;
 
-
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -18,7 +16,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-
 
 @Entity
 @Table(name = "patient")
@@ -38,6 +35,7 @@ public class Patient {
 	@Column(name="lastname")
 	private String lastname;
 	
+	//TODO: Revoir l'affichage de la date dans la list
 	@NotNull
 	@Column(name="birthdate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

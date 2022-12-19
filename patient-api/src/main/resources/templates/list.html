@@ -12,7 +12,7 @@
 	<script>
 	function sendChosenPatientToParent(id){
 		console.log(id);
-		window.parent.postMessage(id,'http://localhost:8081');
+		window.parent.postMessage(id,"[[${urlUI}]]");
 	}
 	</script>
 	

@@ -1,1 +1,27 @@
-DELETE PATIENT!!!
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Home</title>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<--!TODO: revoir la mise en forme des infos-->
+
+<div th:object="${patient}" class="container">
+	<ul>
+		<li>Firstname : <span th:text="*{firstname}"></span></li>
+		<li>Lastname : <span th:text="*{lastname}"></span></li>
+		<li>Gender : <span th:text="*{gender}"></span></li>
+		<li>Birthdate : <span th:text="*{birthdate}"></span></li>
+		<li>Address : <span th:text="*{address}"></span></li>
+		<li>Phone : <span th:text="*{phone}"></span></li>
+	</ul>
+	<span>Confirm delete</span>
+	<a th:href="@{/patient/delete/{id}/confirm(id=*{id})}">Confirm</a>
+	<a th:href="@{/patient/list}">Cancel</a>	
+</div>
+</body>
+</html>

@@ -28,6 +28,7 @@ import com.mediscreen.patientapi.exception.UnknownDataException;
 import com.mediscreen.patientapi.model.Patient;
 import com.mediscreen.patientapi.service.PatientService;
 //TODO: renvoyer ResponnseEntity pour spécifier les codes HTTP
+//TODO: 
 @RestController
 @RequestMapping("/patientapi")
 public class PatientController {
@@ -40,26 +41,6 @@ public class PatientController {
 	@Autowired
 	ObjectMapper mapper;
 	
-	
-	
-	//@GetMapping("/update")
-	//public String viewUpdate()
-	/*
-	@GetMapping("/get")
-	public JsonNode getPatient(@RequestParam String firstname, @RequestParam String lastname, Model model) throws UnknownDataException {
-		
-		logger.info("GET /patient/get?firstname="+firstname+"&lastname="+lastname);
-		Optional<Patient> opt = service.getPatient(firstname, lastname);
-		if (!opt.isPresent()) {
-			throw new UnknownDataException("This patient does not exist.");
-		}
-		Patient patient = opt.get();
-		model.addAttribute("patient",patient);
-		return mapper.valueToTree(patient);
-	}
-	*/
-	
-	//TODO: virer Model
 	@GetMapping("/get")
 	public JsonNode getPatient(@RequestParam Integer id, Model model) throws UnknownDataException {
 		
@@ -70,6 +51,7 @@ public class PatientController {
 		}
 		Patient patient = opt.get();
 		model.addAttribute("patient",patient);
+		System.out.println("patient : "+patient);
 		return mapper.valueToTree(patient);
 	}
 	
@@ -91,26 +73,26 @@ public class PatientController {
 		Patient saved = service.savePatient(patient);
 		logger.info("Success while adding patient(id="+saved.getId()+")");
 	}
-/*	
-	@PutMapping("/update")
-	public void updatePatient(@RequestParam String firstname, @RequestParam String lastname, @RequestParam String birthdate, 
-			@RequestParam String gender, @RequestParam String address, @RequestParam String phone) throws UnknownDataException,IllegalArgumentException {
+
+	@PutMapping("/update/{id}")
+	public void updatePatient(@RequestBody Patient patient, @PathVariable Integer id) throws UnknownDataException,IllegalArgumentException {
 		
-		logger.info("PUT /patient/update?firstname="+firstname+"&lastname="+lastname+"&birthdate="+birthdate+"&gender="+gender+"&address="+address+"&phone="+phone);
-		Optional<Patient> opt = service.getPatient(firstname, lastname);
+		logger.info("PUT /patient/update/"+id+"?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
+				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
+		
+		Optional<Patient> opt = service.getPatient(id);
 		if (!opt.isPresent()) {
-			throw new UnknownDataException("This patient does not exist.");
+			throw new UnknownDataException("This patient does not exist."); //TODO: Réecrire message partout !!
 		}
-		Integer id = opt.get().getId();
-		Patient patient = new Patient(firstname, lastname, Date.parse(birthdate), gender, address, phone);
 		patient.setId(id);
-		service.savePatient(patient);	
+		Patient updated = service.savePatient(patient);
+		logger.info("Success while updating patient(id="+updated.getId()+")");
 	}
-	*/
-	@DeleteMapping("/delete")
-	public void deletePatient(@RequestParam String firstname, @RequestParam String lastname) {
+	
+	@DeleteMapping("/delete/{id}")
+	public void deletePatient(@PathVariable("id") Integer id) {
 		
-		logger.info("DELETE /patient/delete?firsname="+firstname+"&lastname="+lastname);
-		service.deletePatient(firstname, lastname);
+		logger.info("DELETE /patient/delete/"+id);
+		service.deletePatient(id);
 	}
 }
