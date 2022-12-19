@@ -3,6 +3,7 @@ package com.mediscreen.docnoteapi.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class NoteService {
 		return repo.findAll();
 	}
 	
-	public Optional<Note> getById(String id){
-		return repo.findById(id);
+	public Optional<Note> getById(ObjectId noteId){
+		return repo.findById(noteId);
 	}
 	
 	public Note addOrUpdateNote(Note note) {
@@ -39,9 +40,14 @@ public class NoteService {
 		return repo.save(note);
 	}
 	
-	public void deleteNote(String id) {
+	public void deleteNote(ObjectId id) {
 		logger.info("deleteNote : "+id);
 		repo.deleteById(id);
+	}
+	
+	public List<Note> getNotesOfPatient(Integer patientId){
+		logger.info("getNotesOfPatient : "+patientId);
+		return repo.findByPatientId(patientId);
 	}
 	
 }

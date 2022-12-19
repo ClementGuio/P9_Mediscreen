@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Home</title>
+<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+</head>
+<body>
+
+<!--TODO: revoir la mise en forme des infos-->
+
+<div th:object="${note}" class="container">
+	<ul th:object="${note}">
+		<li>Id : <span th:text="*{id}"></span></li>
+		<li>Patient Id : <span th:text="*{patientId}"></span></li>
+		<li>Firstname : <span th:text="*{firstname}"></span></li>
+		<li>Lastname : <span th:text="*{lastname}"></span></li>
+		<li>Comment : <span th:text="*{comment}"></span></li>
+	</ul>		
+	<span>Confirm delete</span>
+	<a th:href="@{/docnote/delete/{patientId}/{id}/confirm (id=*{id},patientId=*{patientId})}">Confirm</a>
+	<a th:href="@{/docnote/history/{patientId}(patientId=*{patientId})}">Cancel</a>	
+</div>
+</body>
+</html>
