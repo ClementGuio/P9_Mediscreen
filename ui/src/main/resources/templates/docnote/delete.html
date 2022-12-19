@@ -8,18 +8,20 @@
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	let url = "http://localhost:8887/patient/add";
+	let param = window.location.href.split('/')[5];
+	let url = "[[${urlDocnoteApi}]]"+"/docnote/delete/"+param;
 	let promise;
 	try{
 		promise = fetch(url);
+		console.log(url);
 	}catch(err){
-		document.getElementById("apiframe").src="404"
+		document.getElementById("apiframe").src="/error404"
 	}
 	promise.then(
 		function(value) {
 			console.log("checkStatus() -> ",value.status);
 			if (!value.ok){
-				document.getElementById("apiframe").src="404";
+				document.getElementById("apiframe").src="/error404";
 			}else{
 				document.getElementById("apiframe").src=url;
 			}
@@ -27,10 +29,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 		function(error) {
 			document.getElementById("apiframe").src="404";
 		}
-	)
-	
+	)	
 });
-
 </script>
 </head>
 <body>

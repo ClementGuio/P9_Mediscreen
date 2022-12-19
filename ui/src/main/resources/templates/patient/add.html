@@ -8,10 +8,8 @@
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	console.log("location: "+window.location.href);
-	let param = window.location.href.split('/')[4];
-	console.log("param: "+param);
-	let url = "http://localhost:8887/patient/get/"+param;
+	let url = "[[${urlPatientApi}]]"+"/patient/add";
+	console.log(url);
 	let promise;
 	try{
 		promise = fetch(url);
@@ -21,7 +19,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	promise.then(
 		function(value) {
 			console.log("checkStatus() -> ",value.status);
-			if (!value.ok){
+			if (!value.ok){ //TODO : traitement spécifique pour chaque erreur pertinente
 				document.getElementById("apiframe").src="404";
 			}else{
 				document.getElementById("apiframe").src=url;
@@ -33,6 +31,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	)
 	
 });
+
 </script>
 </head>
 <body>

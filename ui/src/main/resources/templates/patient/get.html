@@ -8,7 +8,10 @@
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	let url = "http://localhost:8887/patient/list";
+	console.log("location: "+window.location.href);
+	let param = window.location.href.split('/')[4];
+	console.log("param: "+param);
+	let url = "[[${urlPatientApi}]]"+"/patient/get/"+param;
 	let promise;
 	try{
 		promise = fetch(url);
@@ -30,12 +33,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
 	)
 	
 });
-window.addEventListener('message', function(mess){
-	console.log("Parent received :"+mess.data);
-	console.log("Go to /patient/"+mess.data);
-	window.location="/patient/"+mess.data;
-	
-})
 </script>
 </head>
 <body>
