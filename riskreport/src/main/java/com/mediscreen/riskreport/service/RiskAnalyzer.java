@@ -3,33 +3,28 @@ package com.mediscreen.riskreport.service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
 import java.util.Set;
+import java.lang.Iterable;
 
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mediscreen.riskreport.constant.ReportTraits;
-import com.mediscreen.riskreport.model.PatientInfo;
+import com.mediscreen.riskreport.model.PatientReport;
 
 @Service
-public class RiskAnalyser {
+public class RiskAnalyzer {
 	
 	private Set<String> words;
 	
-	public RiskAnalyser() {
-		this.words = new HashSet<String>(Arrays.asList(ReportTraits.TERMS));
+	public RiskAnalyzer() {
+		this.words = new HashSet<String>(Arrays.asList(ReportTraits.TRIGGER_TERMS));
 	}
-	
-	public String report(PatientInfo patient) {
-		Integer wordCount = 0;
-		//List<List<String>> notes = splitNotes(patient.getNotes());
-		
+	//TODO: virer les System.out
+	public void report(PatientReport patient) {
+		Integer wordCount = 0;		
 		for (String note : patient.getNotes()) {
 			System.out.println(note);
 			for (String word : words) {
@@ -41,12 +36,13 @@ public class RiskAnalyser {
 		}
 		System.out.println("WordCount = "+wordCount);
 		Integer riskLvl = evaluate(patient, wordCount);
-		return ReportTraits.LEVELS[riskLvl];
+		patient.setRiskLevel(ReportTraits.RISK_LEVELS[riskLvl]);
 	}
 	
-	private Integer evaluate(PatientInfo patient, Integer wordCount) {
-		Integer age = Period.between(toLocalDate(patient.getBirthdate()),LocalDate.now()).getYears();
-		if(wordCount==0) {
+	private Integer evaluate(PatientReport patient, Integer wordCount) {
+		Integer age = Period.between(patient.getBirthdate(),LocalDate.now()).getYears();
+		System.out.println(age);
+		if(wordCount<2) {
 			return 0;
 		}
 		if (age>=30) {
@@ -60,7 +56,7 @@ public class RiskAnalyser {
 				return 1;
 			}
 		}else {
-			if (patient.getGender().equals("M")) {
+			if (patient.getGender().equals("M")||patient.getGender().equals("m")) {
 				if (wordCount>=5) {
 					return 3;
 				}
@@ -77,9 +73,5 @@ public class RiskAnalyser {
 			}
 		}
 		return 0;
-	}
-
-	public LocalDate toLocalDate(Date date) {
-		return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 }

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Rapport de risque</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+	<h2 class="title">Rapport de risque</h2>
+	<ul class="list-group" th:object="${report}">
+		<li class="list-group-item"><b>Prénom : </b><span th:text="*{Firstname}"></span></li>
+		<li class="list-group-item"><b>Nom : </b><span th:text="*{Lastname}"></span></li>
+		<li class="list-group-item"><b>Niveau de risque : </b><span th:text="*{RiskLevel}"></span></li>
+	</ul>		
+	
+</body>
+</html>
