@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8"/>
+<title>Mediscreen - Patients</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css" >
+<script>
+window.addEventListener('DOMContentLoaded', (event) => {
+	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
+	let url = "[[${urlPatientApi}]]"+"/patient/list";
+	let promise;
+	try{
+		promise = fetch(url);
+	}catch(err){
+		document.getElementById("apiframe").src="/404"
+	}
+	promise.then(
+		function(value) {
+			console.log("checkStatus() -> ",value.status);
+			if (!value.ok){
+				document.getElementById("apiframe").src="/404";
+			}else{
+				document.getElementById("apiframe").src=url;
+			}
+		},
+		function(error) {
+			document.getElementById("apiframe").src="/404";
+		}
+	)
+	
+})
+let id;
+window.addEventListener('message', function(mess){
+	console.log("Parent received :"+mess.data);
+	id = mess.data;
+	document.getElementById('selecterror').style.display = "none";
+})
+function goToHistory(){
+	if (id==undefined){
+		document.getElementById('selecterror').style.display = "block";
+	}else{
+		var url = "/history/"+id;
+		window.location.href=url;
+	}
+} 
+function setSrcIframePatientWithId(src){
+	if (id==undefined){
+		document.getElementById('selecterror').style.display = "block";
+	}else{
+		var url = "[[${urlPatientApi}]]"+src+id;
+		document.getElementById("apiframe").src = url;
+	}
+}
+function setSrcIframePatient(src){
+	var url = "[[${urlPatientApi}]]"+src;
+	document.getElementById("apiframe").src = url;
+}
+</script>
+</head>
+
+<body>
+<div id="banniere">
+	<img id="logo" src="/images/logo.png">
+</div>
+<div class="main">
+	<div class="errorcontainer"><span id="selecterror">Veuillez sélectionner un patient pour continuer.</span></div>
+	<div class="container" >
+		<div id="sidebuttons">
+			<button id="sidebutton" class="btn btn-primary" onclick="goToHistory()">Historique</button>
+			<button id="sidebutton" class="btn btn-primary" onclick="setSrcIframePatient('/patient/add')">Ajouter un patient</button>
+			<button id="sidebutton" class="btn btn-primary" onclick="setSrcIframePatientWithId('/patient/get/')">Détails</button>
+		</div>
+		<iframe src="#" id="apiframe" title="TEST"></iframe>
+	</div>
+</div>
+</body>
+</html>

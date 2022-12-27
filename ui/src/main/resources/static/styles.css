@@ -1,3 +1,58 @@
 * {
 	border : 1px;
 }
+
+#logo {
+	margin-left: 10px;
+	height : 51px;
+	width : 184px;
+}
+
+#apiframe {
+	flex-basis: 80%;
+	height: 500px;
+}
+
+#banniere {
+	background-color: lightblue;
+	height : 10em;
+	display : flex;
+	align-items: center;
+}
+
+#sidebuttons {
+	flex-basis: 10%;
+	display: flex;
+	flex-direction: column;
+	align-self:baseline;
+	margin-top: 30px;
+	margin-right: 20px
+}
+
+#sidebutton{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.errorcontainer{
+	width: 50%;
+	margin: auto;
+	height: 30px;
+}
+#selecterror{
+	font-weight: bold;
+	font-size: 20px;
+	width:auto;
+	color: red;
+	display: none;
+	text-align: center;
+}
+
+.container{
+	margin: auto;
+	display : flex;
+	justify-content: center;
+  	align-items: center;
+	width : 100%;
+	height: auto;
+}

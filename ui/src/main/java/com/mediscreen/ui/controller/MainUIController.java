@@ -1,6 +1,5 @@
 package com.mediscreen.ui.controller;
 
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,16 +23,13 @@ public class MainUIController {
 	@Value("${url.docnoteapi}")
 	private String urlDocnote;
 	
-	@GetMapping("/")
-	public String home() {
-		logger.info("GET /");
-		return "home";
-	} 
+	@Value("${url.riskreport}")
+	private String urlRiskReport;
 	
-	//TODO : Affichage des erreurs + créer template dynamique pour les erreurs
-	@GetMapping("/patient/error404")
+	//FIXME : Affichage des erreurs + créer template dynamique pour les erreurs
+	@GetMapping("/404")
 	public String patient404() {
-		logger.info("GET /patient/error404");
+		logger.debug("GET /patient/404");
 		return "404";
 	} 
 	
@@ -41,73 +37,16 @@ public class MainUIController {
 	public String patientHome(Model model) {
 		logger.info("GET /patient");
 		model.addAttribute("urlPatientApi", urlPatient);
-		return "patient/list";
+		return "patientList";
 	}
 	
-	@GetMapping("/patient/{id}")
-	public String viewGetPatient(@PathVariable("id") Integer id, Model model) {
-	 	logger.info("GET /patient/"+id);
-	 	model.addAttribute("urlPatientApi", urlPatient);
-		return "patient/get"; 
-	}
-	
-	@GetMapping("/patient/add")
-	public String viewAddPatient(Model model) {
-		logger.info("GET /patient/add");
-		
-		model.addAttribute("urlPatientApi", urlPatient);
-		return "patient/add";
-	}
-	
-	@GetMapping("/patient/update/{id}")
-	public String viewUpdatePatient(@PathVariable("id") Integer id, Model model) {
-		logger.info("GET /patient/update/"+id);
-		model.addAttribute("urlPatientApi", urlPatient);
-		return "patient/update";
-	}
-	
-	@GetMapping("/patient/delete/{id}")
-	public String viewDeletePatient(@PathVariable("id") Integer id, Model model) {
-		logger.info("GET /patient/delete/"+id);
-		model.addAttribute("urlPatientApi", urlPatient);
-		return "patient/delete";
-		
-	}
-	
-	@GetMapping("/docnote/history/{patientId}")
+	@GetMapping("/history/{patientId}")
 	public String viewNoteHistory(@PathVariable("patientId") Integer patientId, Model model) {
 		logger.info("GET /docnote/history/"+patientId);
-		System.out.println(urlDocnote);
+
 		model.addAttribute("urlDocnoteApi", urlDocnote);
-		return "docnote/history";
-	}
-	
-	@GetMapping("/docnote/{id}")
-	public String viewNote(@PathVariable("id") ObjectId id, Model model) {
-		logger.info("GET /docnote/"+id);
-		model.addAttribute("urlDocnoteApi", urlDocnote);
-		return "docnote/get";
-	}
-	
-	@GetMapping("/docnote/update/{id}")
-	public String viewUpdateNote(@PathVariable("id") ObjectId id, Model model) {
-		logger.info("GET /docnote/update/"+id);
-		model.addAttribute("urlDocnoteApi", urlDocnote);
-		return "docnote/update";
-	}
-	
-	@GetMapping("/docnote/add")
-	public String viewAddDocnote(Model model) {
-		logger.info("GET /docnote/add");
-		model.addAttribute("urlDocnoteApi", urlDocnote);
-		return "docnote/add";
-	}
-	
-	@GetMapping("/docnote/delete/{id}")
-	public String viewDeleteDocnote(@PathVariable("id") ObjectId id, Model model) {
-		logger.info("GET /docnote/delete/"+id);
-		model.addAttribute("urlDocnoteApi", urlDocnote);
-		return "docnote/delete";
+		model.addAttribute("urlRiskReport", urlRiskReport);
+		return "patientHistory";
 	}
 }
  

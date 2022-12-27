@@ -11,3 +11,6 @@ public class UiApplication {
 	}
 
 }
+//HTML : nettoyer le code Js
+//HTML: terminer le style (banniere, boutons(position, couleur), titre?)
+//HTML: gérer l'affichage de 404 pour report
