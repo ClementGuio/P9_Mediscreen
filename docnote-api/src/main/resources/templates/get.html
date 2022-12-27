@@ -3,21 +3,31 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<title>Note</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
-<!--TODO: revoir la mise en forme des infos-->
-
-<div class="container">
-	<ul th:object="${note}">
-		<li>Id : <span th:text="*{id}"></span></li>
-		<li>Patient Id : <span th:text="*{patientId}"></span></li>
-		<li>Firstname : <span th:text="*{firstname}"></span></li>
-		<li>Lastname : <span th:text="*{lastname}"></span></li>
-		<li>Comment : <span th:text="*{comment}"></span></li>
-	</ul>		
-</div>
+	<h2 class="title">Détails</h2>
+	<ul class="list-group" th:object="${note}">
+		<li class="list-group-item"><b>Prénom : </b><span th:text="*{firstname}"></span></li>
+		<li class="list-group-item"><b>Nom : </b><span th:text="*{lastname}"></span></li>
+		<li class="list-group-item"><b>Sexe : </b><span th:text="*{gender}"></span></li>
+		<li class="list-group-item"><b>Date de naissance : </b><span th:text="*{#temporals.format(birthdate,'dd/MM/yyyy')}"></span></li>
+		<li class="list-group-item"><b>Note : </b><span th:text="*{comment}"></span></li>
+	</ul>
+	<button type="button" class="btn btn-success" th:data-name="${note.id}" th:onclick="window.location.href='/docnote/update/'+this.getAttribute('data-name')">Éditer</button>
+	<button type="button" class="btn btn-danger" onclick="confirm()">Supprimer</button>
+	<div id="confirm">
+		<span>Êtes vous sûr de vouloir supprimer ce dossier?</span>
+		<button type="button" class="btn btn-primary">Annuler</button>
+		<button type="button" class="btn btn-danger" th:data-name="${note.id}" th:onclick="window.location.href='/docnote/delete/'+this.getAttribute('data-name')+'/confirm'">Confirmer</button>
+	</div>
+	<script>
+		function confirm(){
+			document.getElementById("confirm").style.display = "block";
+		}
+	</script>
 </body>
 </html>

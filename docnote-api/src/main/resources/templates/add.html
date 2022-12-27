@@ -3,59 +3,41 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="/css/styles.css" >
+<title>Créer une note</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-<div class="container">
 
-	<!--TODO: STYLE-->
+	<h2 class="title">Créer une note</h2>
 
-	<div class="row">
-		<h2>Add note</h2>
-	</div>
-
-	<div class="row">
-		<form action="#" th:action="@{/docnote/add/submit}" th:object="${note}" method="post" class="form-horizontal" style="width: 100%">
-			 <div class="form-group">
-				<label for="patientId" class="col-sm-2 control-label">Patient Id</label>
-				<div class="col-sm-10">
-					<input type="number" th:field="*{patientId}" id="patientId" placeholder="Patient Id" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('patientId')}" th:errors="*{patientId}"></p>
-				</div>
-			</div>
-			 <div class="form-group">
-				<label for="firstname" class="col-sm-2 control-label">Firstname</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{firstname}" id="firstname" placeholder="Firstname" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}"></p>
-				</div>
-			</div>
-			 <div class="form-group">
-				<label for="lastname" class="col-sm-2 control-label">Lastname</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{lastname}" id="lastname" placeholder="Lastname" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}"></p>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="comment" class="col-sm-2 control-label">Comment</label>
-				<div class="col-sm-10">
-					<input type="text" th:field="*{comment}" id="comment" placeholder="Comment" class="col-4">
-					<p class="text-danger" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></p>
-				</div>
-			</div>
-			 
-			<div class="form-group">
-				<div class="col-sm-12">
-					<!--<a class="btn btn-danger btn-sm" href="/bidList/list">Cancel</a>-->
-					<input class="btn btn-primary btn-sm" type="submit" value="Add Note">
-				</div>
-			</div>
-			
-		</form>
-	</div>
-
-</div>
+	<form action="#" th:action="@{/docnote/add/submit}" th:object="${note}" method="post" class="form-vertical">
+		<ul class="list-group" th:object="${note}">
+			<input th:field="*{patientId}" th:value="*{patientId}" style="display:none">
+			<li id="firstname" class="list-group-item form-group">
+				<b>Prénom : </b><span th:text="*{firstname}"></span>
+				<input th:field="*{firstname}" th:value="*{firstname}" style="display:none">
+			</li>
+			<li id="lastname" class="list-group-item form-group">
+				<b>Nom : </b><span th:text="*{lastname}"></span>
+				<input th:field="*{lastname}" th:value="*{lastname}" style="display:none">
+			</li>
+			<li id="gender" class="list-group-item form-group">
+				<b>Sexe : </b><span th:text="*{gender}"></span>
+				<input th:field="*{gender}" th:value="*{gender}" style="display:none">
+			</li>
+			<li id="birthdate" class="list-group-item form-group">
+				<b>Date de naissance : </b><span th:text="${#temporals.format(note.birthdate,'dd/MM/yyyy')}"></span>
+				<input th:field="*{birthdate}" th:value="*{birthdate}" style="display:none">
+			</li>
+			<li class="list-group-item form-group">
+				<b>Note : </b><textarea cols="80" rows="4" th:field="*{comment}" id="comment" placeholder="....." />
+				<span class="text-danger" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+			</li>
+		</ul>
+		<input class="btn btn-danger" type="button" value="Annuler" th:onclick="|window.location.href='/docnote/patientHistory/${note.patientId}'|">
+		<input class="btn btn-primary" type="submit" value="Confirmer">
+	</form>
+		
 </body>
 </html>

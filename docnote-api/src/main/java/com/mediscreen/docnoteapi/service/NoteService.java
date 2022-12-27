@@ -27,26 +27,22 @@ public class NoteService {
 	}
 	
 	public List<Note> getAllNotes(){
-		logger.info("getAllNotes");
 		return repo.findAll();
 	}
-	
+
 	public Optional<Note> getById(ObjectId noteId){
 		return repo.findById(noteId);
 	}
 	
 	public Note addOrUpdateNote(Note note) {
-		logger.info("addNote : "+note);
 		return repo.save(note);
 	}
 	
 	public void deleteNote(ObjectId id) {
-		logger.info("deleteNote : "+id);
 		repo.deleteById(id);
 	}
 	
 	public List<Note> getNotesOfPatient(Integer patientId){
-		logger.info("getNotesOfPatient : "+patientId);
 		return repo.findByPatientId(patientId);
 	}
 	
