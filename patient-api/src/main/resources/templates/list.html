@@ -3,42 +3,55 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="http://localhost:8081/static/styles.css" >
+<title>List des patients</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
-<div class="container">
-	
-	<script>
-	function sendChosenPatientToParent(id){
-		console.log(id);
-		window.parent.postMessage(id,"[[${urlUI}]]");
-	}
-	</script>
-	
-	<div><h2>Patient list</h2></div>
+	<h2 class="title">Liste des patients</h2>
+	<input class="form-control" id="myInput" type="text" placeholder="Recherche...">
 	<div>
-		<table>
+		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
-					<th>Firstname</th>
-					<th>Lastname</th>
-					<th>Birthdate</th>
+					<th>Prénom</th>
+					<th>Nom</th>
+					<th>Date de naissance</th>
 					<th>Select</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr th:each="patient : ${patientlist}">
-					<td th:text="${patient.firstname}"></td>
-					<td th:text="${patient.lastname}"></td>
-					<td th:text="${patient.birthdate}"></td>
-					<td><button th:onclick="sendChosenPatientToParent([[${patient.id}]])">Select</button></td>
-				</tr>
+			<tbody id="myTable">
+				<form>
+					<tr th:each="patient : ${patientlist}">
+						<td th:text="${patient.firstname}"></td>
+						<td th:text="${patient.lastname}"></td>
+						<td th:text="${#temporals.format(patient.birthdate,'dd/MM/yyyy')}"></td>
+						<td><input th:id="${patient.id}" th:value="${patient.id}" type="radio" class="selectradio" name="select"></input></td>
+					</tr>
+				</form>
 			</tbody>
 		</table>
 	</div>
-
-
-</div>
+	<!--Search bar-->
+	<script>
+		$(document).ready(function(){
+		  $("#myInput").on("keyup", function() {
+		    var value = $(this).val().toLowerCase();
+		    $("#myTable tr").filter(function() {
+		      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+		    });
+		  });
+		});
+	</script>
+	<!--Communication with external parent page-->
+	<script>
+		let elems = document.getElementsByClassName("selectradio");
+		for (let i=0; i<elems.length; i++){
+			let id = elems[i].value;
+			document.getElementById(id).addEventListener("change",function(){
+				window.parent.postMessage(id,"[[${urlUI}]]");
+			})} 
+	</script>
 </body>
 </html>

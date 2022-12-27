@@ -1,0 +1,1 @@
+DELETE FROM patient where lastname = "_Test";

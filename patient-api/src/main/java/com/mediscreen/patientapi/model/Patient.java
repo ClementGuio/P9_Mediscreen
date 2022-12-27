@@ -1,5 +1,6 @@
 package com.mediscreen.patientapi.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -10,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,41 +24,44 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({"Id","Firstname","Lastname","Birthdate","Gender","Address","Phone"})
 public class Patient {
 
+	//TODO: revoir les contraintes : Ajouter @Size
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
 	private Integer id;
 	
-	@NotBlank
+	@NotBlank(message = "Le prénom doit être renseigné")
 	@Column(name="firstname")
 	private String firstname;
 	
-	@NotBlank
+	@NotBlank(message = "Le nom doit être renseigné")
 	@Column(name="lastname")
 	private String lastname;
 	
-	//TODO: Revoir l'affichage de la date dans la list
-	@NotNull
+	@NotNull(message = "La date de naissance doit être renseignée")
 	@Column(name="birthdate")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern="yyyy-MM-dd")
-	Date birthdate;
+	@JsonFormat(pattern="dd/MM/yyyy")
+	LocalDate birthdate;
 	
-	@NotBlank
+	@NotBlank(message = "Le sexe doit être renseigné")
+	@Pattern(regexp ="([MmFf])", message="Pour renseigner le sexe, entrez M (Male) ou F (Female)")
 	@Column(name="gender")
-	private String gender; //TODO :créer enum
+	private String gender;
 	
-	@NotBlank
+	@NotBlank(message = "L\'adresse doit être renseignée")
 	@Column(name="address")
 	private String address;
-	
-	@NotBlank
+	//TODO: n'accepter que les chiffres
+	@NotBlank(message = "Le n° de téléphone doit être renseigné")
 	@Column(name="phone")
 	private String phone;
+	
 
 	public Patient() {}
 	
-	public Patient(@NotBlank String firstname, @NotBlank String lastname, @NotNull Date birthdate,
+	public Patient(@NotBlank String firstname, @NotBlank String lastname, @NotNull LocalDate birthdate,
 			@NotBlank String gender, @NotBlank String address, @NotBlank String phone) {
 		super();
 		this.firstname = firstname;
@@ -67,7 +72,13 @@ public class Patient {
 		this.phone = phone;
 	}
 
-	@JsonGetter("Id")
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", birthdate=" + birthdate
+				+ ", gender=" + gender + ", address=" + address + ", phone=" + phone + "]";
+	}
+
+	@JsonGetter("Id")//TODO: utiliser @JsonGetter sur tous les models (permet d'afficher les clés avec majuscule) !!!PENSER à modifier les templates(?)/fetcher
 	public Integer getId() {
 		return id;
 	}
@@ -92,11 +103,11 @@ public class Patient {
 		this.lastname = lastname;
 	}
 	@JsonGetter("Birthdate")
-	public Date getBirthdate() {
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 	
-	public void setBirthdate(Date birthdate) {
+	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
 	@JsonGetter("Gender")

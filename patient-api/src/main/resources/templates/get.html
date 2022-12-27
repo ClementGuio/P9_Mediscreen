@@ -3,22 +3,37 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
-<link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<title>Détails</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/styles.css">
 </head>
 <body>
 
-<--!TODO: revoir la mise en forme des infos-->
-
-<div class="container">
-	<ul th:object="${patient}">
-		<li>Firstname : <span th:text="*{firstname}"></span></li>
-		<li>Lastname : <span th:text="*{lastname}"></span></li>
-		<li>Gender : <span th:text="*{gender}"></span></li>
-		<li>Birthdate : <span th:text="*{birthdate}"></span></li>
-		<li>Address : <span th:text="*{address}"></span></li>
-		<li>Phone : <span th:text="*{phone}"></span></li>
-	</ul>		
-</div>
+	<h2 class="title">Détails du patient</h2>
+	<ul class="list-group" th:object="${patient}">
+		<li class="list-group-item"><b>Prénom : </b><span th:text="*{firstname}"></span></li>
+		<li class="list-group-item"><b>Nom : </b><span th:text="*{lastname}"></span></li>
+		<li class="list-group-item"><b>Sexe : </b><span th:text="*{gender}"></span></li>
+		<li class="list-group-item"><b>Date de naissance : </b><span th:text="*{#temporals.format(birthdate,'dd/MM/yyyy')}"></span></li>
+		<li class="list-group-item"><b>Adresse : </b><span th:text="*{address}"></span></li>
+		<li class="list-group-item"><b>Téléphone : </b><span th:text="*{phone}"></span></li>
+	</ul>
+	<button type="button" class="btn btn-success" th:onclick="|window.location.href='/patient/update/${patient.id}'|">Update</button>
+	<button type="button" class="btn btn-danger" onclick="confirm()">Delete</button>
+	<div id="confirm">
+		<span><b>Êtes vous sûr de vouloir supprimer ce dossier?</b></span>
+		<button type="button" class="btn btn-primary">Annuler</button>
+		<button type="button" class="btn btn-danger" th:onclick="|window.location.href='/patient/delete/${patient.id}/confirm'|">Confirmer</button>
+	</div>		
+	<script>
+	function goTo(path){
+		windows.location=path;
+	}
+	</script>
+	<script>
+		function confirm(){
+			document.getElementById("confirm").style.display = "block";
+		}
+	</script>
 </body>
 </html>

@@ -1,13 +1,5 @@
 package com.mediscreen.patientapi.controller;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.sql.Date;
-import java.util.Optional;
-
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -21,19 +13,18 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mediscreen.patientapi.exception.UnknownDataException;
 import com.mediscreen.patientapi.model.Patient;
+import com.mediscreen.patientapi.service.PatientService;
 
 @Controller
 @RequestMapping("/patient")
-@CrossOrigin("${url.ui}")
-public class TestUIController {
+@CrossOrigin({"${url.ui}","${url.docnoteapi}"})
+public class ViewController {
 
-	Logger logger = LoggerFactory.getLogger(TestUIController.class);
+	Logger logger = LoggerFactory.getLogger(ViewController.class);
 	
 	@Value("${url.ui}")
 	private String urlUI;
@@ -41,23 +32,26 @@ public class TestUIController {
 	@Autowired
 	private PatientController patientController;
 	
+	@Autowired
+	private PatientService service;
+	
 	@GetMapping("/add")
 	public String viewAdd(Patient patient) {
-		logger.info("GET /patient/add");
+		logger.debug("GET /patient/add");
 		return "add";
 	}
 	
 	@GetMapping("/list")
 	public String viewList(Model model) {
-		logger.info("GET /patient/list");
+		logger.debug("GET /patient/list");
 		patientController.getAllPatients(model);
 		model.addAttribute("urlUI", urlUI);
 		return "list";
 	}
-	
+	//TODO: Virer /get
 	@GetMapping("/get/{id}")
 	public String viewGet(Model model,@PathVariable("id") Integer id) throws UnknownDataException {
-		logger.info("GET /patient/get/"+id);
+		logger.debug("GET /patient/get/"+id);
 		
 		patientController.getPatient(id,model);
 		return "get";
@@ -65,7 +59,7 @@ public class TestUIController {
 	
 	@GetMapping("/update/{id}")
 	public String viewUpdate(Model model, @PathVariable("id") Integer id) throws UnknownDataException{
-		logger.info("GET /patient/update/"+id);
+		logger.debug("GET /patient/update/"+id);
 		
 		patientController.getPatient(id,model);
 		return "update";
@@ -73,34 +67,28 @@ public class TestUIController {
 	
 	@PostMapping("/add/submit")
 	public String submitAdd(@Valid Patient patient, BindingResult bindingResult,Model model) {
-		logger.info("POST /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
+		logger.debug("POST /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
 				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
 		
 		if (!bindingResult.hasErrors()) {
 			patientController.addPatient(patient);
-			return viewList(model); //TODO: redirect
+			model.addAttribute("patientlist", service.getAllPatients());
+			return "redirect:/patient/list";
 		}
 		return "add";
 	}
 	
 	@PostMapping("/update/{id}/submit")
-	public String submitUpdate(@Valid Patient patient, @PathVariable("id") Integer id, BindingResult bindingResult, Model model) throws UnknownDataException{
-		logger.info("PUT /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
+	public String submitUpdate(@Valid Patient patient, @PathVariable("id") Integer id, BindingResult bindingResult, Model model) throws UnknownDataException, IllegalArgumentException{
+		logger.info("POST /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
 				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
 		
 		if (!bindingResult.hasErrors()) {
 			patientController.updatePatient(patient,id);
-			return viewList(model); //TODO: redirect
+			model.addAttribute("patientlist", service.getAllPatients());
+			return "redirect:/patient/list";
 		}
 		return "update";
-	}
-	
-	@GetMapping("/delete/{id}")
-	public String viewDelete(@PathVariable("id") Integer id, Model model) throws UnknownDataException {
-		logger.info("GET /patient/delete/"+id);
-		
-		patientController.getPatient(id, model);
-		return "delete";
 	}
 	
 	@GetMapping("/delete/{id}/confirm")
@@ -108,6 +96,7 @@ public class TestUIController {
 		logger.info("GET /delete/"+id+"/confirm");
 		
 		patientController.deletePatient(id);
-		return viewList(model); //TODO: redirect
+		model.addAttribute("patientlist", service.getAllPatients());
+		return "redirect:/patient/list";
 	}
 }

@@ -3,6 +3,9 @@ package com.mediscreen.patientapi.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +22,11 @@ public class PatientService {
 		return repo.findById(id);
 	}
 	
-	public Optional<Patient> getPatient(String firstname, String lastname){
-		return repo.findByFirstnameAndLastname(firstname, lastname);
-	}
-	
 	public List<Patient> getAllPatients(){
 		return repo.findAll();
 	}
 	
-	public Patient savePatient(Patient patient) {
+	public Patient savePatient(Patient patient){
 		return repo.save(patient);
 	}
 	
@@ -35,7 +34,4 @@ public class PatientService {
 		repo.deleteById(id);
 	}
 	
-	public void deletePatient(String firstname, String lastname) {
-		repo.deleteByFirstnameAndLastname(firstname, lastname);
-	}
 }

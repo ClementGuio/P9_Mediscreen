@@ -1,0 +1,22 @@
+.title {
+	font-weight:bold;
+	font-family: Papyrus, Helvetica, sans-serif;
+	text-align: center;
+}
+
+.label {
+	font-weight: bold;
+}
+
+#confirm{
+	display: none;
+}
+
+label {
+	display: inline-block;
+	width: 10em;
+}
+
+.text-danger {
+	font-weight: bold;
+}
