@@ -10,7 +10,7 @@
 let param;
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	param = window.location.href.split('/')[4];
+	param = window.location.href.split('/')[5];
 	let url = "[[${urlDocnoteApi}]]"+"/docnote/patientHistory/"+param;
 	let promise;
 	try{
@@ -42,14 +42,7 @@ window.addEventListener('message', function(mess){
 	id = mess.data;
 	document.getElementById('selecterror').style.display = "none";
 })
-function goToReport(){
-	if (id==undefined){
-		document.getElementById('selecterror').style.display = "block";
-	}else{
-		var url = "/report/"+id; //Construire requêtes avec body
-		window.location.href=url;
-	}
-} 
+
 function setSrcIframeWithId(src){
 	if (id==undefined){
 		document.getElementById('selecterror').style.display = "block";
@@ -60,10 +53,12 @@ function setSrcIframeWithId(src){
 }
 function setSrcIframe(src){
 	var url = "[[${urlDocnoteApi}]]"+src;
+	console.log(url+param);
 	document.getElementById("apiframe").src = url+param;
 }
 function setSrcIframeReport(){
 	var url = "[[${urlRiskReport}]]"+"/riskreport/"+param;
+	console.log(url);
 	document.getElementById("apiframe").src = url;
 }
 </script>

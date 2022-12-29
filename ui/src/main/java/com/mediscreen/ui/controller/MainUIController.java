@@ -8,9 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 //TODO: utiliser docker-compose
 //TODO: externaliser le code JS
+@RequestMapping("/mediscreen")
 @CrossOrigin(origins = {"${url.patientapi}","${url.docnoteapi}"})   
 @Controller
 public class MainUIController {
