@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.lang.Iterable;
 
@@ -24,8 +25,14 @@ public class RiskAnalyzer {
 	}
 	//TODO: virer les System.out
 	public void report(PatientReport patient) {
+		Integer age = Period.between(patient.getBirthdate(),LocalDate.now()).getYears();
+		Integer riskLvl = evaluate(age, patient.getGender(), wordCount(patient.getNotes()));
+		patient.setRiskLevel(ReportTraits.RISK_LEVELS[riskLvl]);
+	}
+	
+	public Integer wordCount(List<String> notes) {
 		Integer wordCount = 0;		
-		for (String note : patient.getNotes()) {
+		for (String note : notes) {
 			System.out.println(note);
 			for (String word : words) {
 				if (note.toLowerCase().contains(word)) {
@@ -34,44 +41,52 @@ public class RiskAnalyzer {
 				}
 			}
 		}
-		System.out.println("WordCount = "+wordCount);
-		Integer riskLvl = evaluate(patient, wordCount);
-		patient.setRiskLevel(ReportTraits.RISK_LEVELS[riskLvl]);
+		return wordCount;
 	}
 	
-	private Integer evaluate(PatientReport patient, Integer wordCount) {
-		Integer age = Period.between(patient.getBirthdate(),LocalDate.now()).getYears();
-		System.out.println(age);
+	public Integer evaluate(Integer age, String gender, Integer wordCount) {
+		System.out.println("age : "+age+"; wordcount : "+wordCount);
 		if(wordCount<2) {
+			System.out.println("1");
 			return 0;
 		}
 		if (age>=30) {
+			System.out.println("age>=30");
 			if (wordCount>=8) {
+				System.out.println("2");
 				return 3;
 			}
 			if (wordCount>=6) {
+				System.out.println("3");
 				return 2;
 			}
 			if (wordCount>=2) {
+				System.out.println("4");
 				return 1;
 			}
 		}else {
-			if (patient.getGender().equals("M")||patient.getGender().equals("m")) {
+			if (gender.equals("M")||gender.equals("m")) {
 				if (wordCount>=5) {
+					System.out.println("5");
 					return 3;
 				}
 				if (wordCount>=3) {
+					System.out.println("6");
 					return 2;
 				}
-			}else {
+			}
+			if (gender.equals("F")||gender.equals("f")){
 				if (wordCount>=7) {
+					System.out.println("7");
 					return 3;
 				}
 				if (wordCount>=4) {
+					System.out.println("8");
 					return 2;
 				}
 			}
 		}
+		System.out.println("9");
 		return 0;
 	}
 }

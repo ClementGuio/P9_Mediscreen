@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mediscreen.riskreport.exception.NoteNotFoundException;
 import com.mediscreen.riskreport.exception.UnreachableDataException;
+import com.mediscreen.riskreport.model.PatientReport;
 
 @Controller
 @RequestMapping("/riskreport")
-@CrossOrigin("${url.ui}")
+@CrossOrigin({"${url.ui}","${url.docnoteapi}"})
 public class ViewController {
 	
 	@Autowired
@@ -22,7 +23,9 @@ public class ViewController {
 	@GetMapping("/{patientId}")
 	public String viewReport(@PathVariable("patientId") Integer id, Model model) throws UnreachableDataException, NoteNotFoundException {
 		
-		controller.reportRisk(id, model);
+		PatientReport report = controller.buildReport(id);
+		System.out.println("firsname : "+report.getFirstname());
+		model.addAttribute("report", report);
 		return "report";
 	}
 	

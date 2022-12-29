@@ -13,15 +13,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.riskreport.exception.NoteNotFoundException;
 import com.mediscreen.riskreport.model.PatientReport;
 
-
+@CrossOrigin("${url.docnoteapi}")
+@Component
 public class NotesFetcher { //TODO: Renommer la classe
 
-	private static final HttpResponse<String> fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
+	private String fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
 
 		String uri = host+"/docnoteapi/get/patient?patientId="+patientId;
 		System.out.println(uri);
@@ -33,17 +37,18 @@ public class NotesFetcher { //TODO: Renommer la classe
 		HttpResponse<String> response = null;
 		response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		return response;
+		return response.body().toString();
 	}
 	
-	public static final PatientReport fetchNote(String host, Integer patientId) throws IOException, InterruptedException, ParseException, NoteNotFoundException {
+	public PatientReport fetchNote(String host, Integer patientId) throws IOException, InterruptedException, ParseException, NoteNotFoundException {
 		
-		HttpResponse<String> response = fetchBody(host,patientId);
-		if (response.body().isEmpty()) {
+		String response = fetchBody(host,patientId);
+		/*if (response.body().isEmpty()) {
 			throw new NoteNotFoundException("This patient has no notes.");
-		}
+		}*/
+		System.out.println("response: "+response);
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode node = mapper.readTree(response.body().toString());
+		JsonNode node = mapper.readTree(response);
 	
 		List<String> comments = new ArrayList<String>();
 		for (JsonNode subNode : node.findValues("comment")) {
