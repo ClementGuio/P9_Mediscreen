@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ import com.mediscreen.docnoteapi.service.NoteService;
 import com.mediscreen.docnoteapi.util.PatientFetcher;
 //TODO: revoir le nom racine
 @RequestMapping("/docnoteapi")
+@CrossOrigin("${url.riskreport}")
 @RestController
 public class NoteController {
 	
@@ -55,6 +57,9 @@ public class NoteController {
 	@Autowired
 	private NoteService service;
 
+	@Autowired
+	private PatientFetcher fetcher;
+	
 	@GetMapping("/get")
 	public JsonNode getNote(@RequestParam ObjectId noteId, Model model) throws UnknownDataException {
 		logger.debug("GET /docnote/get/"+noteId);
@@ -82,7 +87,7 @@ public class NoteController {
 		logger.debug("POST /docnote/add?patientId="+patientId+"&comment="+comment);
 		Note note;
 		try {
-			note = PatientFetcher.fetchNote(urlPatientApi,patientId); //TODO: Traiter les esceptions
+			note = fetcher.fetchPatient(urlPatientApi,patientId);
 		}catch(IOException e1) {
 			throw new UnreachableDataException("This data is note available. Please try again later or verify the patientId.");
 		}catch(InterruptedException e2) {
@@ -94,26 +99,24 @@ public class NoteController {
 		Note saved = service.addOrUpdateNote(note);
 		logger.debug("Success while adding note(id="+saved.getId());
 	}
-	//TODO: réfléchir à ne demander que l'id et le comment
+	
 	@PutMapping("/update")
-	public void updateNote(@RequestBody Note note, @RequestParam ObjectId noteId) throws UnknownDataException {
-		logger.debug("PUT /docnote/update/"+noteId+"?patientID="+note.getPatientId()+"&firstname="+note.getFirstname()+"&lastname="+note.getLastname()+"&comment="+note.getComment());
+	public void updateNote(@RequestBody String comment, @RequestParam ObjectId noteId) throws UnknownDataException {
+		logger.debug("PUT /docnote/update?="+noteId+"&comment="+comment);
 		
 		Optional<Note> opt = service.getById(noteId);
 		if (!opt.isPresent()) {
 			throw new UnknownDataException("This note doesn't exist.");
 		}
-		Note existing = opt.get();
-		note.setId(existing.getId());
-		note.setBirthdate(existing.getBirthdate());
-		note.setGender(existing.getGender());
+		Note note = opt.get();
+		note.setComment(comment);
 		Note updated = service.addOrUpdateNote(note);
 		logger.debug("Success while updating note(id="+updated.getId());
 	}
 
 	@DeleteMapping("/delete")
 	public void deleteNote(@RequestParam ObjectId noteId) {
-		logger.info("DELETE /docnote/delete/"+noteId);
+		logger.info("DELETE /docnote/delete?noteId="+noteId);
 		
 		service.deleteNote(noteId);
 	}

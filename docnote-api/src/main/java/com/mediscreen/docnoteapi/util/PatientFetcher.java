@@ -19,29 +19,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.docnoteapi.model.Note;
 
 @Component
-public final class PatientFetcher { //TODO: renommer NoteFiller ~
+public class PatientFetcher { //TODO: renommer NoteFiller ~
 	
-	private static final HttpResponse<?> fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
+	public String fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
 
 		String uri = host+"/patientapi/get?id="+patientId;
-		System.out.println(uri);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(uri))
 				.build();
-		System.out.println(request.uri());
+		
 		HttpResponse<?> response = null;
 		response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
-		return response;
+		return response.body().toString();
 	}
 	
-	public static final Note fetchNote(String host, Integer patientId) throws IOException, InterruptedException, ParseException {
+	public Note fetchPatient(String host, Integer patientId) throws IOException, InterruptedException, ParseException {
 		
-		HttpResponse<?> response = fetchBody(host,patientId);
+		String response = fetchBody(host,patientId);
 		
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode node = mapper.readTree(response.body().toString());
+		JsonNode node = mapper.readTree(response);
 
 		String firstname = node.findValue("Firstname").asText();
 		String lastname = node.findValue("Lastname").asText();

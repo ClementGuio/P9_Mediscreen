@@ -49,13 +49,16 @@ public class ViewController {
 	@Autowired
 	private NoteService service;
 	
+	@Autowired
+	PatientFetcher fetcher;
+	
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@GetMapping("/add/{patientId}")
 	public String viewAdd(@PathVariable("patientId") Integer patientId,  Model model) throws IOException, InterruptedException, ParseException {
 		logger.info("GET /docnote/add");
 		
-		Note note = PatientFetcher.fetchNote(urlPatientApi, patientId); //TODO: traiter les exceptions
+		Note note = fetcher.fetchPatient(urlPatientApi, patientId); //TODO: traiter les exceptions
 		model.addAttribute("note",note);
 		return "add";
 	}
@@ -96,8 +99,6 @@ public class ViewController {
 	@PostMapping("/add/submit")
 	public String submitAdd(@Valid Note note, BindingResult bindingResult,Model model) throws JsonMappingException, JsonProcessingException, ParseException {
 		logger.info("POST /docnote/add/submit");
-
-		System.out.println(note);
 		
 		if (!bindingResult.hasErrors()) {
 			service.addOrUpdateNote(note);
@@ -112,7 +113,7 @@ public class ViewController {
 		logger.info("POST /docnote/update/"+id+"/submit");
 		
 		if(!bindingResult.hasErrors()) {
-			noteController.updateNote(note, id);
+			noteController.updateNote(note.getComment(), id);
 			noteController.getNotesOfPatient(note.getPatientId(), model);
 			return "redirect:/docnote/patientHistory/"+note.getPatientId(); 
 		}
