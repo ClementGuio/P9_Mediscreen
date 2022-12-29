@@ -22,7 +22,7 @@
 	<button type="button" class="btn btn-danger" onclick="confirm()">Delete</button>
 	<div id="confirm">
 		<span><b>Êtes vous sûr de vouloir supprimer ce dossier?</b></span>
-		<button type="button" class="btn btn-primary">Annuler</button>
+		<button type="button" class="btn btn-primary" onclick="window.location.href='/patient/list'">Annuler</button>
 		<button type="button" class="btn btn-danger" th:onclick="|window.location.href='/patient/delete/${patient.id}/confirm'|">Confirmer</button>
 	</div>		
 	<script>

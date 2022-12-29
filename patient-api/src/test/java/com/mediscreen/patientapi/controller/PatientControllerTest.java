@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,7 +24,7 @@ import com.mediscreen.patientapi.service.PatientService;
 
 @AutoConfigureMockMvc
 @SpringBootTest
-@Sql(scripts = "../resource/cleanDB.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
+//@Sql(scripts = "../resource/cleanDB.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 public class PatientControllerTest {
 
 	@Autowired
@@ -32,6 +34,13 @@ public class PatientControllerTest {
 	private PatientService service; 
 	
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	
+	@AfterEach
+	public void setup() {
+		for (Patient patient : service.getAllPatients()) {
+			if (patient.getLastname().equals("_Test"));
+		}
+	}
 	
 	@Test
 	public void addPatientTest() throws Exception {
