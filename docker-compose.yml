@@ -1,1 +1,88 @@
+version: '3.3'
 
+services:
+   
+   patientdb:
+        image: mysql:8.0.31
+        container_name: patient-db
+        volumes:
+           - patientDB:/mysqlDB/patientDB        
+        ports:
+           - 3307:3306
+        expose:
+           - 3307
+        networks:
+           - mediscreen
+        environment:
+           MYSQL_ROOT_PASSWORD: root
+           MYSQL_DATABASE: patientDB
+   
+   docnotedb:
+        image: mongo:3.6.8
+        container_name: docnote-db
+        volumes:
+           - docnoteDB:/mongoDB/docnoteDB
+        ports:
+           - 27018:27017
+        networks:
+           - mediscreen
+   
+   patientapi:
+        image: 'docker-patient-api:latest'
+        build:
+            context: ./patient-api
+        container_name: patient-api
+        depends_on:
+           - patientdb
+        ports:
+           - 8887:8888
+        links:
+           - patientdb:patientapi
+        networks:
+           - mediscreen
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://patientdb:3307/patientDB
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: rootroot
+ 
+   docnoteapi:
+        image: 'docker-docnote-api:latest'
+        build: 
+           context: ./docnote-api
+        container_name: docnote-api
+        depends_on:
+           - docnotedb
+        ports:
+           - 8083:8082
+        networks:
+           - mediscreen
+        links:
+           - docnotedb:docnoteapi
+        
+   riskreport:
+        image: 'docker-riskreport:latest'
+        build:
+            context: ./riskreport
+        container_name: riskreport
+        ports:
+           - 8085:8084
+        networks:
+           - mediscreen
+
+   ui:
+        image: 'docker-ui:latest'
+        build: ./ui
+        container_name: ui
+        ports:
+           - 8081:8080
+        networks:
+           - mediscreen
+        environment:
+            URL_PATIENTAPI: http://patientapi:8888
+            URL_RISKREPORT: http://riskreport:8084
+    
+networks:
+    mediscreen: {}
+volumes:
+    patientDB:
+    docnoteDB:
