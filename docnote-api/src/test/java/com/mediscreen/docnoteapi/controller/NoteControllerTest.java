@@ -29,7 +29,7 @@ public class NoteControllerTest {
 	private NoteService service;
 		
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-	
+	/*
 	@Test
 	public void addNoteTest_WhenDataIsUnavailable() throws Exception {
 		
@@ -40,7 +40,7 @@ public class NoteControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 		.andExpect(status().isNotFound());
 	}
-	
+	*/
 	@Test
 	public void getNoteTest() throws Exception {
 		

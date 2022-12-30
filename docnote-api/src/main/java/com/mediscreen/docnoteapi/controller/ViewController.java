@@ -133,4 +133,10 @@ public class ViewController {
 		noteController.getNotesOfPatient(note.getPatientId(), model);
 		return "redirect:/docnote/patientHistory/"+note.getPatientId(); 
 	}
+	
+	@GetMapping("/test")
+	public String viewTest() {
+		logger.info("GET /test");
+		return "test";
+	}
 }

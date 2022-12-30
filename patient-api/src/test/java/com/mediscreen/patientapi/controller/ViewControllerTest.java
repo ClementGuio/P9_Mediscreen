@@ -39,7 +39,9 @@ public class ViewControllerTest {
 	@AfterEach
 	public void setup() {
 		for (Patient patient : service.getAllPatients()) {
-			if (patient.getLastname().equals("_Test"));
+			if (patient.getLastname().equals("_Test")) {
+				service.deletePatient(patient.getId());
+			}
 		}
 	}
 	

@@ -9,7 +9,8 @@
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	let url = "[[${urlPatientApi}]]"+"/patient/list";
+	//let url = "[[${urlPatientApi}]]"+"/patient/list";
+	let url = "[[${urlPatientApi}]]"+"/patient/test";
 	let promise;
 	try{
 		promise = fetch(url);
@@ -64,6 +65,7 @@ function setSrcIframePatient(src){
 <div id="banniere">
 	<img id="logo" src="/images/logo.png">
 </div>
+
 <div class="main">
 	<div class="errorcontainer"><span id="selecterror">Veuillez sélectionner un patient pour continuer.</span></div>
 	<div class="container" >

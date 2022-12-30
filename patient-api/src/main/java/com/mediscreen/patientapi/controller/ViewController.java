@@ -99,4 +99,10 @@ public class ViewController {
 		model.addAttribute("patientlist", service.getAllPatients());
 		return "redirect:/patient/list";
 	}
+	
+	@GetMapping("/test")
+	public String viewTest() {
+		logger.info("GET /test");
+		return "test";
+	}
 }
