@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 //TODO: utiliser docker-compose
 //TODO: externaliser le code JS
 @RequestMapping("/mediscreen")
-@CrossOrigin(origins = {"${url.patientapi}","${url.docnoteapi}"})   
+@CrossOrigin(origins = {"${url.patientapi}","${url.docnoteapi}","${url.riskreport}"})   
 @Controller
 public class MainUIController {
 
@@ -38,6 +38,7 @@ public class MainUIController {
 	@GetMapping("/patient")
 	public String patientHome(Model model) {
 		logger.info("GET /patient");
+		logger.info("urlPatientApi : "+urlPatient);
 		model.addAttribute("urlPatientApi", urlPatient);
 		return "patientList";
 	}
@@ -45,7 +46,8 @@ public class MainUIController {
 	@GetMapping("/history/{patientId}")
 	public String viewNoteHistory(@PathVariable("patientId") Integer patientId, Model model) {
 		logger.info("GET /docnote/history/"+patientId);
-
+		logger.info("urlDocnoteApi : "+urlDocnote);
+		logger.info("urlRiskreport : "+urlRiskReport);
 		model.addAttribute("urlDocnoteApi", urlDocnote);
 		model.addAttribute("urlRiskReport", urlRiskReport);
 		return "patientHistory";

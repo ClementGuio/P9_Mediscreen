@@ -2,7 +2,7 @@ CREATE database patientDB;
 
 USE patientDB;
 
-CREATE TABLE patient (
+CREATE TABLE IF NOT EXISTS patient (
 
 	id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	firstname VARCHAR(64) NOT NULL,

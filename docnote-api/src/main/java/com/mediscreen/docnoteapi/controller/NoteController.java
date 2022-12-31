@@ -62,7 +62,7 @@ public class NoteController {
 	
 	@GetMapping("/get")
 	public JsonNode getNote(@RequestParam ObjectId noteId, Model model) throws UnknownDataException {
-		logger.debug("GET /docnote/get/"+noteId);
+		logger.info("GET /docnote/get/"+noteId);
 		
 		Optional<Note> opt = service.getById(noteId);
 		if (!opt.isPresent()) {

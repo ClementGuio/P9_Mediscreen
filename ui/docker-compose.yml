@@ -1,0 +1,108 @@
+version: '3.3'
+
+services:
+   
+   patientdb:
+        image: mysql:8.0.31
+        container_name: patient-db
+        volumes:
+           - patientDB:/mysqlDB/patientDB        
+        ports:
+           - 3307:3306
+        expose:
+           - 3310
+        networks:
+           - mediscreen
+        environment:
+           MYSQL_ROOT_PASSWORD: root
+           MYSQL_DATABASE: patientDB
+   
+   docnotedb:
+        image: mongo:3.6.8
+        container_name: docnote-db
+        volumes:
+           - docnoteDB:/mongoDB/docnoteDB
+        ports:
+           - 27018:27017
+        networks:
+           - mediscreen
+   
+   patientapi:
+        image: 'docker-patient-api'
+        build:
+            context: ./patient-api
+        container_name: patient-api
+        depends_on:
+           - patientdb
+        ports:
+           - 8887:8888
+        links:
+           - patientdb:patientapi
+        networks:
+            mediscreen:
+                ipv4_address: 172.0.0.2
+        environment:
+            SPRING_DATASOURCE_URL: jdbc:mysql://patientdb:3306/patientDB
+            SPRING_DATASOURCE_USERNAME: root
+            SPRING_DATASOURCE_PASSWORD: rootroot
+            URL_UI: http://patientapi:8081
+            URL_RISKREPORT: http://riskreport:8085
+            URL_DOCNOTEAPI: http://docnoteapi:8083
+ 
+   docnoteapi:
+        image: 'docker-docnote-api'
+        build: ./docnote-api
+        container_name: docnote-api
+        depends_on:
+           - docnotedb
+        ports:
+           - 8083:8082
+        networks:
+           mediscreen:
+                ipv4_address: 172.0.0.3
+        links:
+           - docnotedb:docnoteapi
+        environment:
+            URL_PATIENTAPI: http://patientapi:8887
+            URL_RISKREPORT: http://riskreport:8083
+            URL_UI: http://docnoteapi:8081
+        
+   riskreport:
+        image: 'docker-riskreport:latest'
+        build:
+            context: ./riskreport
+        container_name: riskreport
+        ports:
+           - 8085:8084
+        networks:
+           mediscreen:
+                ipv4_address: 172.0.0.4
+        environment:
+            URL_PATIENTAPI: http://patientapi:8887
+            URL_UI: http://riskreport:8081
+            URL_DOCNOTEAPI: http://docnoteapi:8083
+
+   ui:
+        image: 'docker-ui'
+        build: ./ui
+        container_name: ui
+        ports:
+           - 8081:8080
+        networks:
+           mediscreen:
+                ipv4_address: 172.0.0.5
+        environment:
+            URL_PATIENTAPI: http://patientapi:8887
+            URL_RISKREPORT: http://riskreport:8085
+            URL_DOCNOTEAPI: http://docnoteapi:8083
+    
+networks:
+    mediscreen:
+        driver: bridge
+        ipam:
+            config:
+               - subnet: 172.0.0.0/8
+               - gateway: 172.0.0.1
+volumes:
+    patientDB:
+    docnoteDB:

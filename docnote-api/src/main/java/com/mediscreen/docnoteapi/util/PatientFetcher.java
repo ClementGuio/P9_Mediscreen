@@ -24,6 +24,7 @@ public class PatientFetcher { //TODO: renommer NoteFiller ~
 	public String fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
 
 		String uri = host+"/patientapi/get?id="+patientId;
+		System.out.println("url : "+uri);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(uri))
@@ -31,7 +32,8 @@ public class PatientFetcher { //TODO: renommer NoteFiller ~
 		
 		HttpResponse<?> response = null;
 		response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		
+		System.out.println("response :"+response.request());
+		System.out.println("uri :"+response.request().uri());
 		return response.body().toString();
 	}
 	
