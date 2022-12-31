@@ -6,7 +6,7 @@ services:
         image: mysql:8.0.31
         container_name: patientdb
         volumes:
-           - patientDBdata:/var/lib/sql        
+           - patientDB:/patientdb/sql        
         ports:
            - 3307:3306
         healthcheck:
