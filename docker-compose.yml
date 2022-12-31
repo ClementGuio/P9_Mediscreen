@@ -104,3 +104,107 @@ networks:
 volumes:
     patientDB:
     docnoteDB:
+services:
+   
+   patientdb:
+        image: mysql:8.0.31
+        container_name: patientdb
+        volumes:
+           - patientDBdata:/var/lib/sql        
+        ports:
+           - 3307:3306
+        healthcheck:
+            test: ["CMD", 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-prootroot' ]
+            interval: 10s
+            timeout: 5s
+            retries: 10  
+        networks:
+           - mediscreen
+        environment:
+           MYSQL_ROOT_PASSWORD: rootroot
+           MYSQL_DATABASE: patientDB
+   
+   docnotedb:
+        image: mongo:3.6.8
+        container_name: docnotedb
+        volumes:
+           - docnoteDB:/mongoDB/docnoteDB
+        ports:
+           - 27018:27018
+        networks:
+           - mediscreen
+   
+   patientapi:
+        image: 'docker-patient-api'
+        build:
+            context: ./patient-api
+        container_name: patientapi
+        depends_on:
+           patientdb:
+                condition: service_healthy
+        ports:
+           - 8887:8888
+        links:
+           - patientdb:patientapi
+        restart: on-failure:10
+        networks:
+           - mediscreen
+        environment:
+           - "spring.datasource.url=jdbc:mysql://patientdb:3306/patientDB"
+           - "spring.datasource.username=root"
+           - "spring.datasource.password=rootroot"
+           - "url.ui=http://ui:8080"
+           - "url.docnoteapi=http://docnoteapi:8082"
+           - "url.riskreport=http://docnoteapi:8084"
+ 
+   docnoteapi:
+        image: 'docker-docnote-api'
+        build: ./docnote-api
+        container_name: docnoteapi
+        depends_on:
+           - docnotedb
+        ports:
+           - 8083:8082
+        networks:
+           - mediscreen
+        links:
+           - docnotedb:docnoteapi
+        environment:
+           - "url.patientapi=http://patientapi:8888"
+           - "url.riskreport=http://riskreport:8084"
+           - "url.ui=http://ui:8080"
+        
+   riskreport:
+        image: 'docker-riskreport:latest'
+        build:
+            context: ./riskreport
+        container_name: riskreport
+        ports:
+           - 8085:8084
+        networks:
+           - mediscreen
+        environment:
+           - "url.patientapi=http://patientapi:8888"
+           - "url.docnoteapi=http://docnoteapi:8082"
+           - "url.ui=http://ui:8080"
+
+   ui:
+        image: 'docker-ui'
+        build: ./ui
+        container_name: ui
+        ports:
+           - 8081:8080
+        networks:
+           - mediscreen
+        environment:
+           - "url.patientapi=http://patientapi:8888"
+           - "url.docnoteapi=http://docnoteapi:8082"
+           - "url.riskreport=http://riskreport:8084"
+
+    
+networks:
+    mediscreen:
+        
+volumes:
+    patientDB:
+    docnoteDB:
