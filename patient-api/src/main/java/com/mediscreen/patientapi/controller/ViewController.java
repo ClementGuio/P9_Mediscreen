@@ -1,5 +1,7 @@
 package com.mediscreen.patientapi.controller;
 
+import java.net.UnknownHostException;
+
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.mediscreen.patientapi.exception.UnknownDataException;
 import com.mediscreen.patientapi.model.Patient;
 import com.mediscreen.patientapi.service.PatientService;
+import com.mediscreen.patientapi.util.UrlResolver;
 
 @Controller
 @RequestMapping("/patient")
@@ -26,8 +29,14 @@ public class ViewController {
 
 	Logger logger = LoggerFactory.getLogger(ViewController.class);
 	
-	@Value("${url.ui}")
-	private String urlUI;
+	@Autowired
+	private UrlResolver resolver;
+	
+	@Value("${host.ui}")
+	private String hostUi;
+	
+	@Value("${port.ui}")
+	private String portUi;
 	
 	@Autowired
 	private PatientController patientController;
@@ -42,10 +51,15 @@ public class ViewController {
 	}
 	
 	@GetMapping("/list")
-	public String viewList(Model model) {
+	public String viewList(Model model) throws UnknownHostException {
 		logger.debug("GET /patient/list");
+		
+		String resolvedUrlUi = resolver.buildResolvedUrl(hostUi, portUi);
+		
+		logger.info("resolvedUrlUi : "+resolvedUrlUi);
+
 		patientController.getAllPatients(model);
-		model.addAttribute("urlUI", urlUI);
+		model.addAttribute("urlUI", resolvedUrlUi);
 		return "list";
 	}
 	//TODO: Virer /get

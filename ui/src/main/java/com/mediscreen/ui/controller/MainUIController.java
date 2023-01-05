@@ -1,7 +1,10 @@
 package com.mediscreen.ui.controller;
 
+import java.net.UnknownHostException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.mediscreen.ui.util.UrlResolver;
 
 //TODO: utiliser docker-compose
 //TODO: externaliser le code JS
@@ -19,14 +24,26 @@ public class MainUIController {
 
 	Logger logger = LoggerFactory.getLogger(MainUIController.class);
 	
-	@Value("${url.patientapi}")
-	private String urlPatient;
-		
-	@Value("${url.docnoteapi}")
-	private String urlDocnote;
+	@Autowired
+	UrlResolver resolver;
 	
-	@Value("${url.riskreport}")
-	private String urlRiskReport;
+	@Value("${host.patientapi}")
+	private String hostPatient;
+	
+	@Value("${port.patientapi}")
+	private String portPatient;
+	
+	@Value("${host.docnoteapi}")
+	private String hostDocnote;
+	
+	@Value("${port.docnoteapi}")
+	private String portDocnote;
+	
+	@Value("${host.riskreport}")
+	private String hostRiskreport;
+	
+	@Value("${port.riskreport}")
+	private String portRiskreport;
 	
 	//FIXME : Affichage des erreurs + créer template dynamique pour les erreurs
 	@GetMapping("/404")
@@ -36,20 +53,29 @@ public class MainUIController {
 	} 
 	
 	@GetMapping("/patient")
-	public String patientHome(Model model) {
+	public String patientHome(Model model) throws UnknownHostException {
 		logger.info("GET /patient");
+		
+		String urlPatient = resolver.buildResolvedUrl(hostPatient, portPatient);
+		
 		logger.info("urlPatientApi : "+urlPatient);
+		
 		model.addAttribute("urlPatientApi", urlPatient);
 		return "patientList";
 	}
 	
 	@GetMapping("/history/{patientId}")
-	public String viewNoteHistory(@PathVariable("patientId") Integer patientId, Model model) {
+	public String viewNoteHistory(@PathVariable("patientId") Integer patientId, Model model) throws UnknownHostException {
 		logger.info("GET /docnote/history/"+patientId);
+		
+		String urlDocnote = resolver.buildResolvedUrl(hostDocnote, portDocnote);
+		String urlRiskreport = resolver.buildResolvedUrl(hostRiskreport, portRiskreport);
+		
 		logger.info("urlDocnoteApi : "+urlDocnote);
-		logger.info("urlRiskreport : "+urlRiskReport);
+		logger.info("urlRiskreport : "+urlRiskreport);
+		
 		model.addAttribute("urlDocnoteApi", urlDocnote);
-		model.addAttribute("urlRiskReport", urlRiskReport);
+		model.addAttribute("urlRiskReport", urlRiskreport);
 		return "patientHistory";
 	}
 }

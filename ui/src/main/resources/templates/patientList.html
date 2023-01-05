@@ -9,8 +9,9 @@
 <script>
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
-	//let url = "[[${urlPatientApi}]]"+"/patient/list";
-	let url = "[[${urlPatientApi}]]"+"/patient/test";
+	let url = "[[${urlPatientApi}]]"+"/patient/list";
+	console.log(url);
+	//let url = "[[${urlPatientApi}]]"+"/patient/test";
 	let promise;
 	try{
 		promise = fetch(url);
@@ -43,6 +44,7 @@ function goToHistory(){
 		document.getElementById('selecterror').style.display = "block";
 	}else{
 		var url = "/mediscreen/history/"+id;
+		console.log(url);
 		window.location.href=url;
 	}
 } 

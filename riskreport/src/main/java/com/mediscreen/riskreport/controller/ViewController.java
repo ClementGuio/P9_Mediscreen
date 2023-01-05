@@ -28,9 +28,8 @@ public class ViewController {
 	@GetMapping("/patient/{patientId}")
 	public String viewReport(@PathVariable("patientId") Integer id, Model model) throws UnreachableDataException, NoteNotFoundException {
 		
-		PatientReport report = controller.buildReport(id);
-		System.out.println("firsname : "+report.getFirstname());
-		model.addAttribute("report", report);
+		controller.reportRisk(id,model);
+		
 		return "report";
 	}
 	

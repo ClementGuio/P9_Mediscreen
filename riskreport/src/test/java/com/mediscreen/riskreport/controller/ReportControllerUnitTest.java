@@ -42,7 +42,7 @@ public class ReportControllerUnitTest {
 		
 		doReturn(report).when(mockFetcher).fetchNote(urlPatientApi,0);
 
-		JsonNode node = controller.reportRisk(0);
+		JsonNode node = controller.reportRisk(0,null);
 		
 		assertThat(node.findValue("RiskLevel").textValue()).isEqualTo("None");
 	}

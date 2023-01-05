@@ -6,7 +6,7 @@ services:
         image: mysql:8.0.31
         container_name: patientdb
         volumes:
-           - patientDBdata:/var/lib/sql        
+           - patientDB:/patientdb/sql        
         ports:
            - 3307:3306
         healthcheck:
@@ -50,8 +50,9 @@ services:
            - "spring.datasource.username=root"
            - "spring.datasource.password=rootroot"
            - "url.ui=http://ui:8080"
+           - "host.ui=ui"
+           - "port.ui=8080"
            - "url.docnoteapi=http://docnoteapi:8082"
-           - "url.riskreport=http://docnoteapi:8084"
  
    docnoteapi:
         image: 'docker-docnote-api'
@@ -69,6 +70,12 @@ services:
            - "url.patientapi=http://patientapi:8888"
            - "url.riskreport=http://riskreport:8084"
            - "url.ui=http://ui:8080"
+           - "host.ui=ui"
+           - "port.ui=8080"
+           - "spring.data.mongodb.port=27018"
+           - "spring.data.mongodb.host=docnotedb"
+           - "spring.data.mongodb.database=docnotedb"
+           - "spring.data.mongodb.uri=mongodb://docnotedb"
         
    riskreport:
         image: 'docker-riskreport:latest'
@@ -94,8 +101,14 @@ services:
            - mediscreen
         environment:
            - "url.patientapi=http://patientapi:8888"
+           - "host.patientapi=patientapi"
+           - "port.patientapi=8888"
            - "url.docnoteapi=http://docnoteapi:8082"
+           - "host.docnoteapi=docnoteapi"
+           - "port.docnoteapi=8082"
            - "url.riskreport=http://riskreport:8084"
+           - "host.riskreport=riskreport"
+           - "port.riskreport=8084"
 
     
 networks:

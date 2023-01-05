@@ -11,8 +11,8 @@ let param;
 window.addEventListener('DOMContentLoaded', (event) => {
 	document.getElementById("apiframe").src="/images/loading-loading-forever.gif";
 	param = window.location.href.split('/')[5];
-	//let url = "[[${urlDocnoteApi}]]"+"/docnote/patientHistory/"+param;
-	let url = "[[${urlDocnoteApi}]]"+"/docnote/test";
+	let url = "[[${urlDocnoteApi}]]"+"/docnote/patientHistory/"+param;
+	//let url = "[[${urlDocnoteApi}]]"+"/docnote/test";
 	let promise;
 	try{
 		promise = fetch(url);
@@ -58,8 +58,8 @@ function setSrcIframe(src){
 	document.getElementById("apiframe").src = url+param;
 }
 function setSrcIframeReport(){
-	//var url = "[[${urlRiskReport}]]"+"/riskreport/patient/"+param;
-	var url = "[[${urlRiskReport}]]"+"/riskreport/test";
+	var url = "[[${urlRiskReport}]]"+"/riskreport/patient/"+param;
+	//var url = "[[${urlRiskReport}]]"+"/riskreport/test";
 	console.log(url);
 	document.getElementById("apiframe").src = url;
 }

@@ -1,6 +1,7 @@
 package com.mediscreen.docnoteapi.controller;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +30,7 @@ import com.mediscreen.docnoteapi.exception.UnknownDataException;
 import com.mediscreen.docnoteapi.model.Note;
 import com.mediscreen.docnoteapi.service.NoteService;
 import com.mediscreen.docnoteapi.util.PatientFetcher;
+import com.mediscreen.docnoteapi.util.UrlResolver;
 
 @Controller
 @RequestMapping("/docnote")
@@ -37,8 +39,14 @@ public class ViewController {
 
 	Logger logger = LoggerFactory.getLogger(ViewController.class);
 	
-	@Value("${url.ui}")
-	private String urlUI;
+	@Autowired
+	UrlResolver resolver;
+	
+	@Value("${host.ui}")
+	private String hostUi;
+	
+	@Value("${port.ui}")
+	private String portUi;
 	
 	@Value("${url.patientapi}")
 	private String urlPatientApi;
@@ -64,11 +72,13 @@ public class ViewController {
 	}
 	
 	@GetMapping("/patientHistory/{patientId}")
-	public String viewHistory(@PathVariable("patientId") Integer patientId, Note note, Model model) {
+	public String viewHistory(@PathVariable("patientId") Integer patientId, Note note, Model model) throws UnknownHostException {
 		logger.info("GET /patientHistory/"+patientId);
 		
+		String resolvedUrlUi = resolver.buildResolvedUrl(hostUi, portUi); 
+		logger.info("resolvedUrlUI : "+resolvedUrlUi);
 		noteController.getNotesOfPatient(patientId, model);
-		model.addAttribute("urlUI", urlUI);
+		model.addAttribute("urlUI", resolvedUrlUi);
 		return "history";
 	}
 	

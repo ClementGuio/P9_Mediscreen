@@ -37,14 +37,16 @@ public class ReportController {
 	@Autowired
 	NotesFetcher fetcher;
 	
+	@Autowired
+	ObjectMapper mapper;
+	
 	@GetMapping("/assess")
-	public JsonNode reportRisk(@RequestParam Integer patientId) throws UnreachableDataException, NoteNotFoundException {
+	public JsonNode reportRisk(@RequestParam Integer patientId, Model model) throws UnreachableDataException, NoteNotFoundException {
 		logger.debug("GET /assess?patientId="+patientId);
 		
 		PatientReport report = buildReport(patientId);
 		riskAnalyzer.report(report);
-		
-		ObjectMapper mapper = new ObjectMapper(); 
+		model.addAttribute("report", report);
 		
 		return mapper.valueToTree(report);
 	}
