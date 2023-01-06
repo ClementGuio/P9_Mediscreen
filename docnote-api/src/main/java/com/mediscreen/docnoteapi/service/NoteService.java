@@ -20,12 +20,6 @@ public class NoteService {
 	@Autowired
 	private NoteRepository repo;
 	
-	
-	//TODO: supprimer
-	public void deleteAll() {
-		repo.deleteAll();
-	}
-	
 	public List<Note> getAllNotes(){
 		return repo.findAll();
 	}

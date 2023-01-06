@@ -28,13 +28,12 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		logger.info("OK !!!!!");
         try {
 			registry.addMapping("/**")
 			.allowedMethods("GET","POST")
 			.allowedOrigins(resolver.buildResolvedUrl(hostUi, portUi));
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			logger.debug(e.getLocalizedMessage());
 		}
     }
 }

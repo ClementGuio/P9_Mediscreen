@@ -1,8 +1,6 @@
 package com.mediscreen.patientapi.model;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +21,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Table(name = "patient")
 @JsonPropertyOrder({"Id","Firstname","Lastname","Birthdate","Gender","Address","Phone"})
 public class Patient {
-
-	//TODO: revoir les contraintes : Ajouter @Size
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,7 +49,7 @@ public class Patient {
 	@NotBlank(message = "L\'adresse doit être renseignée")
 	@Column(name="address")
 	private String address;
-	//TODO: n'accepter que les chiffres
+	
 	@NotBlank(message = "Le n° de téléphone doit être renseigné")
 	@Column(name="phone")
 	private String phone;
@@ -78,7 +74,7 @@ public class Patient {
 				+ ", gender=" + gender + ", address=" + address + ", phone=" + phone + "]";
 	}
 
-	@JsonGetter("Id")//TODO: utiliser @JsonGetter sur tous les models (permet d'afficher les clés avec majuscule) !!!PENSER à modifier les templates(?)/fetcher
+	@JsonGetter("Id")
 	public Integer getId() {
 		return id;
 	}

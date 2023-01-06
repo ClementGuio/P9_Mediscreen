@@ -62,7 +62,7 @@ public class ViewController {
 		model.addAttribute("urlUI", resolvedUrlUi);
 		return "list";
 	}
-	//TODO: Virer /get
+	
 	@GetMapping("/get/{id}")
 	public String viewGet(Model model,@PathVariable("id") Integer id) throws UnknownDataException {
 		logger.debug("GET /patient/get/"+id);
@@ -94,7 +94,7 @@ public class ViewController {
 	
 	@PostMapping("/update/{id}/submit")
 	public String submitUpdate(@Valid Patient patient, @PathVariable("id") Integer id, BindingResult bindingResult, Model model) throws UnknownDataException, IllegalArgumentException{
-		logger.info("POST /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
+		logger.debug("POST /patient/submit?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
 				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
 		
 		if (!bindingResult.hasErrors()) {
@@ -107,16 +107,10 @@ public class ViewController {
 	
 	@GetMapping("/delete/{id}/confirm")
 	public String confirmDelete(@PathVariable("id") Integer id, Model model) throws UnknownDataException{
-		logger.info("GET /delete/"+id+"/confirm");
+		logger.debug("GET /delete/"+id+"/confirm");
 		
 		patientController.deletePatient(id);
 		model.addAttribute("patientlist", service.getAllPatients());
 		return "redirect:/patient/list";
-	}
-	
-	@GetMapping("/test")
-	public String viewTest() {
-		logger.info("GET /test");
-		return "test";
 	}
 }

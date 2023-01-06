@@ -33,7 +33,6 @@
 	<script>
 		let elems = document.getElementsByClassName("selectradio");
 		for (let i=0; i<elems.length; i++){
-			console.log(elems[i].value);
 			document.getElementById(elems[i].value).addEventListener("change",function(){
 				window.parent.postMessage(elems[i].value,"[[${urlUI}]]");
 			})} 

@@ -11,5 +11,3 @@ public class DocnoteApiApplication{
 	}
 
 }
-//HTML: alléger history -> (prénom, nom en dehors de la table & ne pas afficher birthdate, gender) + ajouter date de la note
-//HTML: get -> bouton annuler ne fait rien

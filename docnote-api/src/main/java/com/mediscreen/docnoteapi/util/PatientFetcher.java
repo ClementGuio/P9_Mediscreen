@@ -6,12 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,12 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.docnoteapi.model.Note;
 
 @Component
-public class PatientFetcher { //TODO: renommer NoteFiller ~
+public class PatientFetcher {
 	
 	public String fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
 
 		String uri = host+"/patientapi/get?id="+patientId;
-		System.out.println("url : "+uri);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(uri))
@@ -32,8 +27,6 @@ public class PatientFetcher { //TODO: renommer NoteFiller ~
 		
 		HttpResponse<?> response = null;
 		response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		System.out.println("response :"+response.request());
-		System.out.println("uri :"+response.request().uri());
 		return response.body().toString();
 	}
 	

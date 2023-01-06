@@ -17,4 +17,3 @@ public class RiskreportApplication{
 	}
 
 }
-//HTML: Mettre en valeur le niveau de risque ????

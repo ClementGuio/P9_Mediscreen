@@ -1,18 +1,9 @@
 package com.mediscreen.docnoteapi.controller;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -23,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.docnoteapi.exception.UnknownDataException;
@@ -40,7 +28,7 @@ import com.mediscreen.docnoteapi.exception.UnreachableDataException;
 import com.mediscreen.docnoteapi.model.Note;
 import com.mediscreen.docnoteapi.service.NoteService;
 import com.mediscreen.docnoteapi.util.PatientFetcher;
-//TODO: revoir le nom racine
+
 @RequestMapping("/docnoteapi")
 @CrossOrigin("${url.riskreport}")
 @RestController
@@ -62,7 +50,7 @@ public class NoteController {
 	
 	@GetMapping("/get")
 	public JsonNode getNote(@RequestParam ObjectId noteId, Model model) throws UnknownDataException {
-		logger.info("GET /docnote/get/"+noteId);
+		logger.debug("GET /docnote/get/"+noteId);
 		
 		Optional<Note> opt = service.getById(noteId);
 		if (!opt.isPresent()) {
@@ -97,7 +85,7 @@ public class NoteController {
 		}
 		note.setComment(comment);
 		Note saved = service.addOrUpdateNote(note);
-		logger.debug("Success while adding note(id="+saved.getId());
+		logger.info("Success while adding note(id="+saved.getId());
 	}
 	
 	@PutMapping("/update")
@@ -111,14 +99,13 @@ public class NoteController {
 		Note note = opt.get();
 		note.setComment(comment);
 		Note updated = service.addOrUpdateNote(note);
-		logger.debug("Success while updating note(id="+updated.getId());
+		logger.info("Success while updating note(id="+updated.getId());
 	}
 
 	@DeleteMapping("/delete")
 	public void deleteNote(@RequestParam ObjectId noteId) {
-		logger.info("DELETE /docnote/delete?noteId="+noteId);
+		logger.debug("DELETE /docnote/delete?noteId="+noteId);
 		
 		service.deleteNote(noteId);
-	}
-	
+	}	
 }

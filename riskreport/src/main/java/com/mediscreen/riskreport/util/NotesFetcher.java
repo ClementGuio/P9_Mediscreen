@@ -6,11 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -23,17 +21,15 @@ import com.mediscreen.riskreport.model.PatientReport;
 
 @CrossOrigin("${url.docnoteapi}")
 @Component
-public class NotesFetcher { //TODO: Renommer la classe
+public class NotesFetcher {
 
 	private String fetchBody(String host, Integer patientId) throws IOException, InterruptedException {
 
 		String uri = host+"/docnoteapi/get/patient?patientId="+patientId;
-		System.out.println(uri);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(uri))
 				.build();
-		System.out.println(request.uri());
 		HttpResponse<String> response = null;
 		response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
@@ -43,17 +39,15 @@ public class NotesFetcher { //TODO: Renommer la classe
 	public PatientReport fetchNote(String host, Integer patientId) throws IOException, InterruptedException, ParseException, NoteNotFoundException {
 		
 		String response = fetchBody(host,patientId);
-		/*if (response.body().isEmpty()) {
+		if (response.isEmpty()) {
 			throw new NoteNotFoundException("This patient has no notes.");
-		}*/
-		System.out.println("response: "+response);
+		}
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode node = mapper.readTree(response);
 	
 		List<String> comments = new ArrayList<String>();
 		for (JsonNode subNode : node.findValues("comment")) {
 			comments.add(subNode.asText());
-			System.out.println(subNode.asText());
 		}
 		String firstname = node.findValues("firstname").get(0).asText();
 		String lastname = node.findValues("lastname").get(0).asText();

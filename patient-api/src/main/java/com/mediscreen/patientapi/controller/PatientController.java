@@ -3,20 +3,13 @@ package com.mediscreen.patientapi.controller;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.PersistenceException;
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mediscreen.patientapi.exception.UnknownDataException;
 import com.mediscreen.patientapi.model.Patient;
 import com.mediscreen.patientapi.service.PatientService;
-//TODO: Revoir le nom racine 
+
 @RestController
 @RequestMapping("/patientapi")
 @CrossOrigin("${url.docnoteapi}")
@@ -64,9 +57,9 @@ public class PatientController {
 		model.addAttribute("patientlist", allPatients);
 		return mapper.valueToTree(allPatients);
 	}
-	//TODO: pourquoi IllegalArgumentException
+
 	@PostMapping("/add")
-	public void addPatient(@RequestBody Patient patient) throws IllegalArgumentException{
+	public void addPatient(@RequestBody Patient patient){
 		logger.debug("POST /patient/add?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
 				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
 		
@@ -75,14 +68,14 @@ public class PatientController {
 	}
 	
 	@PutMapping("/update")
-	public void updatePatient(@RequestBody Patient patient, @RequestParam Integer id) throws UnknownDataException,IllegalArgumentException {
+	public void updatePatient(@RequestBody Patient patient, @RequestParam Integer id) throws UnknownDataException {
 		
 		logger.debug("PUT /patient/update/"+id+"?firstname="+patient.getFirstname()+"&lastname="+patient.getLastname()+"&birthdate="+patient.getBirthdate()+
 				"&gender="+patient.getGender()+"&address="+patient.getAddress()+"&phone="+patient.getPhone());
 		
 		Optional<Patient> opt = service.getPatient(id);
 		if (!opt.isPresent()) {
-			throw new UnknownDataException("This patient does not exist."); //FIXME: Réecrire message partout !!
+			throw new UnknownDataException("This patient does not exist."); 
 		}
 		patient.setId(id);
 		
@@ -92,7 +85,7 @@ public class PatientController {
 	
 	@DeleteMapping("/delete")
 	public void deletePatient(@RequestParam Integer id) throws UnknownDataException {
-		logger.info("DELETE /patient/delete/"+id);
+		logger.debug("DELETE /patient/delete/"+id);
 		if(service.getPatient(id).isEmpty()) {
 			throw new UnknownDataException("This patient does not exist.");
 		}

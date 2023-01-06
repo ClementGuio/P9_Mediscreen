@@ -38,5 +38,4 @@ public class ErrorHandler {
 	public String handleUnreachableDataException(UnreachableDataException e) {
 		return "Erreur! Le service que vous demandez n'est pas disponible actuellement. Veuillez verifier l'id du patient ou réessayez plus tard.";
 	}
-	
 }

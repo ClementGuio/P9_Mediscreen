@@ -1,8 +1,6 @@
 package com.mediscreen.docnoteapi.model;
 
 import java.time.LocalDate;
-import java.util.Date;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +11,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.mongodb.lang.NonNull;
@@ -23,9 +20,6 @@ import com.mediscreen.docnoteapi.configuration.ObjectIdSerializer;
 @Document(collection = "notes")
 @JsonPropertyOrder({"Id","PatientId","Firstname","Lastname","Birthdate","Gender","Comment"})
 public class Note {
-
-	//TODO: ajouter date de la note 
-	//TODO: ajouter contraintes
 	
 	@Id
 	@JsonSerialize(using = ObjectIdSerializer.class)

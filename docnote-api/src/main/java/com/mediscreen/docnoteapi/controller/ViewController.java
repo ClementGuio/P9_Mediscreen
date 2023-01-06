@@ -3,8 +3,6 @@ package com.mediscreen.docnoteapi.controller;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -14,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,20 +57,18 @@ public class ViewController {
 	@Autowired
 	PatientFetcher fetcher;
 	
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
 	@GetMapping("/add/{patientId}")
 	public String viewAdd(@PathVariable("patientId") Integer patientId,  Model model) throws IOException, InterruptedException, ParseException {
-		logger.info("GET /docnote/add");
+		logger.debug("GET /docnote/add");
 		
-		Note note = fetcher.fetchPatient(urlPatientApi, patientId); //TODO: traiter les exceptions
+		Note note = fetcher.fetchPatient(urlPatientApi, patientId);
 		model.addAttribute("note",note);
 		return "add";
 	}
 	
 	@GetMapping("/patientHistory/{patientId}")
 	public String viewHistory(@PathVariable("patientId") Integer patientId, Note note, Model model) throws UnknownHostException {
-		logger.info("GET /patientHistory/"+patientId);
+		logger.debug("GET /patientHistory/"+patientId);
 		
 		String resolvedUrlUi = resolver.buildResolvedUrl(hostUi, portUi); 
 		logger.info("resolvedUrlUI : "+resolvedUrlUi);
@@ -84,7 +79,7 @@ public class ViewController {
 	
 	@GetMapping("/get/{id}")
 	public String viewGet(@PathVariable("id") ObjectId id, Model model) throws UnknownDataException {
-		logger.info("GET /docnote/get/"+id);
+		logger.debug("GET /docnote/get/"+id);
 		
 		noteController.getNote(id, model);
 		return "get";
@@ -92,7 +87,7 @@ public class ViewController {
 	
 	@GetMapping("/update/{id}")
 	public String viewUpdate(@PathVariable("id") ObjectId id, Model model) throws UnknownDataException {
-		logger.info("GET /docnote/update/"+id);
+		logger.debug("GET /docnote/update/"+id);
 		
 		noteController.getNote(id, model);
 		return "update";
@@ -100,7 +95,7 @@ public class ViewController {
 	
 	@GetMapping("/delete/{id}")
 	public String viewDelete(@PathVariable("id") ObjectId id,Model model) throws UnknownDataException {
-		logger.info("GET /docnote/delete/"+id); 
+		logger.debug("GET /docnote/delete/"+id); 
 		
 		noteController.getNote(id,model);
 		return "delete";
@@ -108,7 +103,7 @@ public class ViewController {
 	
 	@PostMapping("/add/submit")
 	public String submitAdd(@Valid Note note, BindingResult bindingResult,Model model) throws JsonMappingException, JsonProcessingException, ParseException {
-		logger.info("POST /docnote/add/submit");
+		logger.debug("POST /docnote/add/submit");
 		
 		if (!bindingResult.hasErrors()) {
 			service.addOrUpdateNote(note);
@@ -120,7 +115,7 @@ public class ViewController {
 	
 	@PostMapping("/update/{id}/submit")
 	public String submitUpdate(@Valid Note note, @PathVariable("id") ObjectId id, BindingResult bindingResult, Model model) throws UnknownDataException {
-		logger.info("POST /docnote/update/"+id+"/submit");
+		logger.debug("POST /docnote/update/"+id+"/submit");
 		
 		if(!bindingResult.hasErrors()) {
 			noteController.updateNote(note.getComment(), id);
@@ -132,7 +127,7 @@ public class ViewController {
 	
 	@GetMapping("/delete/{id}/confirm")
 	public String confirmDelete(@PathVariable("id") ObjectId id, Model model) throws UnknownDataException {
-		logger.info("GET /docnote/delete/"+id+"/confirm");
+		logger.debug("GET /docnote/delete/"+id+"/confirm");
 		
 		Optional<Note> opt = service.getById(id);
 		if (!opt.isPresent()) {
@@ -144,9 +139,4 @@ public class ViewController {
 		return "redirect:/docnote/patientHistory/"+note.getPatientId(); 
 	}
 	
-	@GetMapping("/test")
-	public String viewTest() {
-		logger.info("GET /test");
-		return "test";
-	}
 }

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.mediscreen.ui.util.UrlResolver;
 
-//TODO: utiliser docker-compose
-//TODO: externaliser le code JS
 @RequestMapping("/mediscreen")
 @CrossOrigin(origins = {"${url.patientapi}","${url.docnoteapi}","${url.riskreport}"})   
 @Controller
@@ -45,7 +43,6 @@ public class MainUIController {
 	@Value("${port.riskreport}")
 	private String portRiskreport;
 	
-	//FIXME : Affichage des erreurs + créer template dynamique pour les erreurs
 	@GetMapping("/404")
 	public String patient404() {
 		logger.debug("GET /patient/404");
@@ -54,11 +51,9 @@ public class MainUIController {
 	
 	@GetMapping("/patient")
 	public String patientHome(Model model) throws UnknownHostException {
-		logger.info("GET /patient");
+		logger.debug("GET /patient");
 		
 		String urlPatient = resolver.buildResolvedUrl(hostPatient, portPatient);
-		
-		logger.info("urlPatientApi : "+urlPatient);
 		
 		model.addAttribute("urlPatientApi", urlPatient);
 		return "patientList";
@@ -66,13 +61,10 @@ public class MainUIController {
 	
 	@GetMapping("/history/{patientId}")
 	public String viewNoteHistory(@PathVariable("patientId") Integer patientId, Model model) throws UnknownHostException {
-		logger.info("GET /docnote/history/"+patientId);
+		logger.debug("GET /docnote/history/"+patientId);
 		
 		String urlDocnote = resolver.buildResolvedUrl(hostDocnote, portDocnote);
 		String urlRiskreport = resolver.buildResolvedUrl(hostRiskreport, portRiskreport);
-		
-		logger.info("urlDocnoteApi : "+urlDocnote);
-		logger.info("urlRiskreport : "+urlRiskreport);
 		
 		model.addAttribute("urlDocnoteApi", urlDocnote);
 		model.addAttribute("urlRiskReport", urlRiskreport);
