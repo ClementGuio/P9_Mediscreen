@@ -21,15 +21,13 @@ Mediscreen is an application that allows doctors to register their patients, rec
      
 ## Getting started
 
-To simply lauch Mediscreen App, you have to build every services and skip tests. Go to service root folder and execute : **mvn clean package -Dmaven.test.skip**
-After building all services, go to the root folder of the project and execute with admin or superuser rights : ** docker-compose build --no-cache ** and ** docker-compose up **
+To simply lauch Mediscreen App, you have to build every services and skip tests. Go to service root folder and execute : **mvn clean package -Dmaven.test.skip**.
+After building all services, go to the root folder of the project and execute with admin or superuser rights : ** docker-compose build --no-cache ** and ** docker-compose up **.
 Now, you have to retrieve ip of docker-ui microservice, execute : ** docker ps **, copy container ID, execute ** docker inspect <containerID> ** and look for IPAddress.
 Then, you can access Mediscreen in your browser via ** <docker-uiIP>:8080/mediscreen/patient **.
-
-If you want to launch tests, you will have to install Mysql and create database by using initdb.sql in patient-api folder (verify that the mysql port 3306 or modify it in applications.properties). 
-Then you can build simply by executing ** mvn clean package **.
-This will run the tests and build package in case of success.
-
 To access API, retrieve all IPs and port in order to request the good location.
 
-** WARNING ** : If you execute Mediscreen App locally you will not be able to use UI, only API requests.
+If you want to launch tests, you will have to install Mysql and create database by using initdb.sql in patient-api folder (verify that the mysql port 3306 or modify it in applications.properties). 
+Then you can build simply by executing ** mvn clean package **. This will run the tests and build package in case of success.
+
+** WARNING ** : If you execute Mediscreen App locally you will not be able to use UI, only API requests. Please prefer docking application.
