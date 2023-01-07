@@ -31,3 +31,7 @@ If you want to launch tests, you will have to install Mysql and create database 
 Then you can build simply by executing **mvn clean package**. This will run the tests and build package in case of success.  
 
 **WARNING** : If you execute Mediscreen App locally you will not be able to use UI, only API requests. Please prefer docking application.  
+
+## Architecture diagram
+
+![Architecture diagram](./architecture_microservice.png)
